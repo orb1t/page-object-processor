@@ -1,0 +1,30 @@
+buildscript {
+    ext {
+        selenideVersion = '4.5.1'
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+tasks.withType(JavaCompile) {
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+    options.encoding = 'UTF-8'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile "com.codeborne:selenide:${selenideVersion}"
+    testCompile 'junit:junit:4.12'
+    testCompile 'com.google.testing.compile:compile-testing:0.11'
+    testCompile files(System.getProperty('java.home') + '/../lib/tools.jar')
+}
+
+// Gradleと@RunWith(Enclosed.class)なテストクラスの相性がよろしくない。
+// staticにネストしたテストクラスを除外して@RunWith(Enclosed.class)の実行だけに絞る。
+// http://d.hatena.ne.jp/shuji_w6e/20120808/1344386399
+test.exclude '**/*$*'
